@@ -1,0 +1,93 @@
+create table customer (
+customer_id int auto_increment not null,
+customer_name varchar(25) not null,
+customer_address varchar(255),
+customer_phone bigint not null,
+customer_email varchar(60) not null,
+customer_password varchar(60) not null,
+customer_pincode int,
+primary key(customer_id,customer_id)
+);
+
+create table categories(
+category_id int auto_increment not null,
+category_name varchar(30) not null,
+category_description text,
+primary key(category_id)
+); 
+
+create table products(
+product_id int auto_increment not null,
+category_id int,
+product_name varchar(50) not null,
+product_description text,
+product_price decimal(18,2)not null,
+primary key(product_id),
+foreign key(category_id) references categories(category_id)
+);
+
+create table seller (
+seller_id int auto_increment not null,
+seller_name varchar(30) not null,
+seller_phone int not null,
+seller_email varchar(60) not null,
+seller_password varchar(60) not null,
+primary key(seller_id) 
+);
+
+create table shopping_order(
+order_id int auto_increment not null,
+customer_id int not null,
+order_date date,
+order_total decimal(18,2)not null,
+primary key(order_id),
+foreign key(customer_id) references customer(customer_id)
+);
+
+create table deliveries (
+delivery_id int auto_increment not null,
+order_id int not null,
+delivery_date date not null,
+primary key(delivery_id),
+foreign key (order_id) references shopping_order(order_id)
+);
+
+create table payments(
+payment_id varchar(20)not null,
+order_id int not null,
+payment_date date not null,
+payment_time time not null,
+primary key(payment_id),
+foreign key(order_id) references shopping_order(order_id)
+);
+
+create table transaction_reports(
+report_id int not null,
+customer_id int,
+order_id int,
+product_id int,
+payment_id varchar(20),
+primary key(report_id),
+foreign key (customer_id) references customer(customer_id),
+ foreign key (order_id) references shopping_order(order_id),
+ foreign key (product_id) references products(product_id),
+ foreign key (payment_id) references payments(payment_id)
+);
+
+create table cart(
+    item_id int auto_increment not null,
+    customer_id int not null,
+    product_id int not null,
+    quantity int not null,
+    primary key(item_id),
+    foreign key (customer_id) references customer(customer_id),
+    foreign key(product_id) references products(product_id)
+);
+
+create table product_images(
+    image_id int auto_increment not null,
+    product_id int not null,
+    image_url varchar(255) not null,
+    foreign key(product_id) references products(product_id),
+    primary key(image_id)
+);
