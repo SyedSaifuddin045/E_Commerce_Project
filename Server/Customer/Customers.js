@@ -89,15 +89,29 @@ class Customers {
     customer_name,
     customer_address,
     customer_phone,
-    customer_pincode
+    customer_pincode,
+    customer_password
   ) {
     try {
+      let checkSql = `
+        SELECT customer_password FROM customer WHERE customer_id = ?;
+      `;
+      let checkValues = [customer_id];
+      var [checkResult] = await connection.execute(checkSql, checkValues);
+      if (checkResult.length === 0) {
+        throw new Error("Customer not found");
+      }
+      let storedPassword = checkResult[0].customer_password;
+      let isMatch = await bcrypt.compare(customer_password, storedPassword);
+      if (!isMatch) {
+        throw new Error("Password does not match");
+      }
       let sql = `
-    UPDATE customer 
-    SET
-     customer_name = ?,customer_address=?,customer_phone=?,customer_pincode=?  
-    WHERE customer_id = ?;
-    `;
+        UPDATE customer
+        SET
+         customer_name = ?,customer_address=?,customer_phone=?,customer_pincode=?  
+        WHERE customer_id = ?;
+      `;
       let values = [
         customer_name,
         customer_address,
@@ -106,12 +120,13 @@ class Customers {
         customer_id,
       ];
       var [result] = await connection.execute(sql, values);
-      // console.log(result);
       return result.affectedRows;
     } catch (err) {
       console.log(err);
+      throw err;
     }
   }
+
   static async UpdateEmail(customer_id, customer_email, customer_new_email) {
     let sql = `select * from customer where customer_email = ?`;
     let values = [customer_new_email];

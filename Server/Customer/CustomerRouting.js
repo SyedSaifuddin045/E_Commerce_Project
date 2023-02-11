@@ -203,13 +203,15 @@ router.put(
       customer_address,
       customer_phone,
       customer_pincode,
+      customer_password
     } = req.body;
     let result = await Customers.UpdateDetails(
       customer_id,
       customer_name,
       customer_address,
       customer_phone,
-      customer_pincode
+      customer_pincode,
+      customer_password
     );
     //console.log("Result from routing \n" +result);
     if (result == 1)
