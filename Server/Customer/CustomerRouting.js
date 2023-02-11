@@ -23,7 +23,7 @@ router.post(
     check("customer_name")
       .trim()
       .bail()
-      .matches(/^\S*\s\S*$/)
+      .matches(/\S+\s\S+/)
       .withMessage("Name must contain exactly one space"),
     check("customer_phone")
       .trim()
@@ -69,7 +69,6 @@ router.post(
         customer_password,
         customer_pincode
       );
-      //console.log(C.customer_password);
       var insertid = await Customers.Add(C);
       if (Number.isInteger(insertid)) {
         res.status(200).send({

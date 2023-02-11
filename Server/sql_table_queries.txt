@@ -29,7 +29,7 @@ foreign key(category_id) references categories(category_id)
 create table seller (
 seller_id int auto_increment not null,
 seller_name varchar(30) not null,
-seller_phone int not null,
+seller_phone bigint not null,
 seller_email varchar(60) not null,
 seller_password varchar(60) not null,
 primary key(seller_id) 
